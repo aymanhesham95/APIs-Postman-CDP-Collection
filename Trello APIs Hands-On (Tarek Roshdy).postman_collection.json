@@ -1,0 +1,352 @@
+{
+	"info": {
+		"_postman_id": "9d9d8384-6e26-44d9-a914-133655af9880",
+		"name": "Trello APIs Hands-On (Tarek Roshdy)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19402083"
+	},
+	"item": [
+		{
+			"name": "Create Board ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let Board_JSONdata = pm.response.json();\r",
+							"pm.environment.set(\"BoardID\", Board_JSONdata.id);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"postman.setNextRequest(\"Create a list on the board\");"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const RandomNumber= Math.floor(Math.random()*1000 );\r",
+							"pm.environment.set(\"BoardName\", \"Ayman Board \" + RandomNumber);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/1/boards/?key={{key}}&token={{token}}&name={{BoardName}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"1",
+						"boards",
+						""
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						},
+						{
+							"key": "name",
+							"value": "{{BoardName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a list on the board",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const RandomNumber= Math.floor(Math.random()*1000 );\r",
+							"pm.environment.set(\"ListName\", \"Ayman List \" + RandomNumber);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let List_JSONdata = pm.response.json();\r",
+							"pm.environment.set(\"ListID\", List_JSONdata.id);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"postman.setNextRequest(\"Create a card under the list\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/1/lists?key={{key}}&token={{token}}&name={{ListName}}&idBoard={{BoardID}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"1",
+						"lists"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						},
+						{
+							"key": "name",
+							"value": "{{ListName}}"
+						},
+						{
+							"key": "idBoard",
+							"value": "{{BoardID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a card under the list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let Card_JSONdata = pm.response.json();\r",
+							"pm.environment.set(\"CardID\", Card_JSONdata.id);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const RandomNumber= Math.floor(Math.random()*1000 );\r",
+							"pm.environment.set(\"CardName\", \"Ayman Card \" + RandomNumber);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/1/cards?key={{key}}&token={{token}}&idList={{ListID}}&name={{CardName}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"1",
+						"cards"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						},
+						{
+							"key": "idList",
+							"value": "{{ListID}}"
+						},
+						{
+							"key": "name",
+							"value": "{{CardName}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Archive the created card",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/1/cards/:id?key={{key}}&token={{token}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"1",
+						"cards",
+						":id"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{CardID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Archive the created list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/1/lists/:id/closed?key={{key}}&token={{token}}&value=true",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"1",
+						"lists",
+						":id",
+						"closed"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						},
+						{
+							"key": "value",
+							"value": "true"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{ListID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete the created board",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/1/boards/:id?key={{key}}&token={{token}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"1",
+						"boards",
+						":id"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{key}}"
+						},
+						{
+							"key": "token",
+							"value": "{{token}}"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{BoardID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
